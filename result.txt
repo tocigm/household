@@ -1,0 +1,12 @@
+images/Printers_Scanners/de42afb21c9abbcd89646746d94b4a1ed90a9d87.jpg	washing machine:1.000	speaker:0.000	wardrobe:0.000	printer:0.000	refrigerator:0.000
+images/Printers_Scanners/9f9ba856fe6d9bae063ff1391e0afcc5c9039451.jpg	refrigerator:0.987	sofa:0.009	printer:0.004	washing machine:0.000	wardrobe:0.000
+images/Printers_Scanners/8739cd3743bdbd455ef9df08fa4df6090dd93a13.jpg	printer:0.991	sofa:0.008	baggage:0.000	refrigerator:0.000	laptop:0.000
+images/Printers_Scanners/470be552f6dc30b594abf9878103db3953c077b2.jpg	wardrobe:0.957	tv monitor:0.024	speaker:0.017	sofa:0.001	refrigerator:0.000
+images/Printers_Scanners/d3ba3bab4bb928d724fdef6c2eb90a2a9d534075.jpg	laptop:0.915	refrigerator:0.085	tv monitor:0.000	baggage:0.000	armoire:0.000
+images/Printers_Scanners/34966914afa36205c46c141529d08c9f1e6d9531.jpg	laptop:0.840	printer:0.137	sofa:0.020	refrigerator:0.004	baggage:0.000
+images/Printers_Scanners/76d31de2e29575250d3a4c31ebd933bcbca16839.jpg	washing machine:0.963	microwave:0.030	printer:0.007	computer:0.000	tv monitor:0.000
+images/Printers_Scanners/15c3751c84666f5ee9f4dcd11e0d88b5503378c0.jpg	sofa:1.000	printer:0.000	laptop:0.000	wardrobe:0.000	washing machine:0.000
+images/Printers_Scanners/67cc71ef5246df760d0a0ce6e6f6d486fb6b7f99.jpg	sofa:1.000	baggage:0.000	printer:0.000	laptop:0.000	washing machine:0.000
+images/Printers_Scanners/293623fea78159d8c71ab050540d64290d177537.jpg	refrigerator:0.979	washing machine:0.018	printer:0.002	baggage:0.000	sofa:0.000
+images/Printers_Scanners/35e7526db09aeea18841362f4511843bf7666b9a.jpg	speaker:0.989	sofa:0.007	laptop:0.003	baggage:0.001	washing machine:0.000
+images/Printers_Scanners/18aa72f7909fa0d3f90f37d33077d31ecb58fa73.jpg	refrigerator:0.791	printer:0.209	wardrobe:0.000	washing machine:0.000	tv monitor:0.000

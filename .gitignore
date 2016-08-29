@@ -1,0 +1,6 @@
+images/
+uploads/
+*.pyc
+output
+model_alexnet-60000
+model_alexnet-60000.meta
