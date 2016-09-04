@@ -48,22 +48,32 @@ network = dropout(network, 0.5)
 network = fully_connected(network, 4096, activation='tanh')
 network = dropout(network, 0.5)
 network = fully_connected(network, 5, activation='softmax')
-network = regression(network, optimizer='momentum',
-                     loss='categorical_crossentropy',
-                     learning_rate=0.001)
+# network = regression(network, optimizer='momentum',
+#                      loss='categorical_crossentropy',
+#                      learning_rate=0.001)
 
 # Load network
 model = tflearn.DNN(network)
 model.load("model_alexnet-58")
+
 
 def predict(image_path):
     img = load_image(image_path)
     img = resize_image(img, 227, 227)
     img = pil_to_nparray(img)
     pred = model.predict([img])
+    import tensorflow as tf
+    tf.initialize_all_variables()
+    tf.train.write_graph(model.session.graph_def,
+                         'models/', 'ts_bin_graph.pb',
+                         as_text=False)
     pred = np.array(pred[0])
     object_index = pred.argsort()[-3:][::-1]
     result = {}
     for idx in object_index:
         result[CLASS[idx]] = "%.3f" % pred[idx]
     return result
+
+
+
+
