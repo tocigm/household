@@ -3,10 +3,3 @@ n02774630 baggage
 n03180011 computer
 n03642806 laptop
 n03691459 speaker
-n03761084 microwave
-n04004767 printer
-n04070727 refrigerator
-n04256520 sofa
-n04405762 tv_monitor
-n04550184 wardrobe
-n04554684 washing_machine

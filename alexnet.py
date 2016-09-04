@@ -46,7 +46,7 @@ network = fully_connected(network, 4096, activation='tanh')
 network = dropout(network, 0.5)
 network = fully_connected(network, 4096, activation='tanh')
 network = dropout(network, 0.5)
-network = fully_connected(network, 12, activation='softmax')
+network = fully_connected(network, 5, activation='softmax')
 network = regression(network, optimizer='momentum',
                      loss='categorical_crossentropy',
                      learning_rate=0.001)
@@ -54,6 +54,6 @@ network = regression(network, optimizer='momentum',
 # Training
 model = tflearn.DNN(network, checkpoint_path='model_alexnet',
                     max_checkpoints=1, tensorboard_verbose=3,tensorboard_dir='output')
-model.fit(X, Y, n_epoch=10000, validation_set=0.1, shuffle=True,
-          show_metric=True, batch_size=10, snapshot_step=5000,
+model.fit(X, Y, n_epoch=10, validation_set=0.1, shuffle=True,
+          show_metric=True, batch_size=1, snapshot_step=1,
           snapshot_epoch=False, run_id='alexnet_house')

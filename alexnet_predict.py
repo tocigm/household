@@ -47,14 +47,14 @@ network = fully_connected(network, 4096, activation='tanh')
 network = dropout(network, 0.5)
 network = fully_connected(network, 4096, activation='tanh')
 network = dropout(network, 0.5)
-network = fully_connected(network, 12, activation='softmax')
+network = fully_connected(network, 5, activation='softmax')
 network = regression(network, optimizer='momentum',
                      loss='categorical_crossentropy',
                      learning_rate=0.001)
 
 # Load network
 model = tflearn.DNN(network)
-model.load("model_alexnet-60000")
+model.load("model_alexnet-58")
 
 def predict(image_path):
     img = load_image(image_path)
