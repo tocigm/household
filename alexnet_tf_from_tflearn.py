@@ -213,7 +213,6 @@ class Alexnet(object):
                 pred = session.run([mpredict._pred],{mpredict._x:X})
                 acc = np.mean(np.equal(pred,Y))
         return acc, pred
-    
                                     
 class TrainConfig():
     load = False

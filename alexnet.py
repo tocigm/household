@@ -31,17 +31,21 @@ def pil_to_nparray(pil_image):
 """
 # Building 'AlexNet'
 network = input_data(shape=[None, 227, 227, 3])
+
 network = conv_2d(network, 96, 11, strides=4, activation='relu')
 network = max_pool_2d(network, 3, strides=2)
 network = local_response_normalization(network)
+
 network = conv_2d(network, 256, 5, activation='relu')
 network = max_pool_2d(network, 3, strides=2)
 network = local_response_normalization(network)
+
 network = conv_2d(network, 384, 3, activation='relu')
 network = conv_2d(network, 384, 3, activation='relu')
 network = conv_2d(network, 256, 3, activation='relu')
 network = max_pool_2d(network, 3, strides=2)
 network = local_response_normalization(network)
+
 network = fully_connected(network, 4096, activation='tanh')
 network = dropout(network, 0.5)
 network = fully_connected(network, 4096, activation='tanh')
