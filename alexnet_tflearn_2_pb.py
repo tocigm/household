@@ -30,39 +30,39 @@ tf.app.flags.DEFINE_string('model_path', '/home/tra161/WORK/projects/object_reg/
 FLAGS = tf.app.flags.FLAGS
 
 def main(_):
+
+    # LOAD  TFLEARN MODEL
+    inp = input_data(shape=[None, 227, 227, 3])
+    s1_conv1 = conv_2d(inp, 96, 11, strides=4, activation='relu')
+    pool1 = max_pool_2d(s1_conv1, 3, strides=2)
+    norm1 = local_response_normalization(pool1)
+    
+    s2_conv1 = conv_2d(norm1, 256, 5, activation='relu')
+    pool2 = max_pool_2d(s2_conv1, 3, strides=2)
+    norm2 = local_response_normalization(pool2)
+    
+    s3_conv1 = conv_2d(norm2, 384, 3, activation='relu')
+    s3_conv2 = conv_2d(s3_conv1, 384, 3, activation='relu')
+    s3_conv3 = conv_2d(s3_conv2, 256, 3, activation='relu')
+    pool3 = max_pool_2d(s3_conv3, 3, strides=2)
+    norm3 = local_response_normalization(pool3)
+        
+    s4_fc1 = fully_connected(norm3, 4096, activation='tanh')
+    s4_fc1_do = dropout(s4_fc1, 0.5)
+    s4_fc2 = fully_connected(s4_fc1_do, 4096, activation='tanh')
+    s4_fc2_do = dropout(s4_fc2, 0.5)
+    s4_fc3 = fully_connected(s4_fc2_do, 12, activation='softmax')
+    network = regression(s4_fc3, optimizer='momentum',
+                         loss='categorical_crossentropy',
+                         learning_rate=0.001)
+
+    tflearn_model = tflearn.DNN(network)
+    tflearn_model.load(FLAGS.model_path)
+    
     with tf.Graph().as_default():
-        ''' Note that this input is different from standard alexnet where the size is 224x224 '''
+        ### Note that this input is different from standard alexnet where the size is 224x224 
         _x = tf.placeholder(tf.float32,[None,227,227,3])
         _y = tf.placeholder(tf.int32,[None,1])
-
-
-        # LOAD  TFLEARN MODEL
-        inp = input_data(shape=[None, 227, 227, 3])
-        s1_conv1 = conv_2d(inp, 96, 11, strides=4, activation='relu')
-        pool1 = max_pool_2d(s1_conv1, 3, strides=2)
-        norm1 = local_response_normalization(pool1)
-    
-        s2_conv1 = conv_2d(norm1, 256, 5, activation='relu')
-        pool2 = max_pool_2d(s2_conv1, 3, strides=2)
-        norm2 = local_response_normalization(pool2)
-    
-        s3_conv1 = conv_2d(norm2, 384, 3, activation='relu')
-        s3_conv2 = conv_2d(s3_conv1, 384, 3, activation='relu')
-        s3_conv3 = conv_2d(s3_conv2, 256, 3, activation='relu')
-        pool3 = max_pool_2d(s3_conv3, 3, strides=2)
-        norm3 = local_response_normalization(pool3)
-        
-        s4_fc1 = fully_connected(norm3, 4096, activation='tanh')
-        s4_fc1_do = dropout(s4_fc1, 0.5)
-        s4_fc2 = fully_connected(s4_fc1_do, 4096, activation='tanh')
-        s4_fc2_do = dropout(s4_fc2, 0.5)
-        s4_fc3 = fully_connected(s4_fc2_do, 12, activation='softmax')
-        network = regression(s4_fc3, optimizer='momentum',
-                             loss='categorical_crossentropy',
-                             learning_rate=0.001)
-
-        tflearn_model = tflearn.DNN(network)
-        tflearn_model.load(FLAGS.model_path)
 
         #print(tflearn_model.get_weights(s4_fc3.b))
         
@@ -85,8 +85,8 @@ def main(_):
             _pool1 = tf.nn.max_pool(out_s1_conv1, ksize=[1,3,3,1],strides=[1,2,2,1],
                                     padding='SAME',name='pool1')
             #Local response norm at stage 1
-            ''' Note that this follows the default of tflearn and different from standard alexnet
-            where (bias)k=2.0)'''
+            ### Note that this follows the default of tflearn and different from standard alexnet
+            ### where (bias)k=2.0)
             _norm1 = tf.nn.lrn(_pool1,5,bias=1.0,alpha=0.0001,beta=0.75,name='norm1')
          
             ####################################################################################
@@ -106,8 +106,8 @@ def main(_):
             _pool2 = tf.nn.max_pool(_out_s2_conv1, ksize=[1,3,3,1],strides=[1,2,2,1],
                                     padding='SAME',name='pool2')
             #Local response norm at stage 1
-            ''' Note that this follows the default of tflearn and different from standard alexnet
-            where (bias)k=2.0)'''
+            ### Note that this follows the default of tflearn and different from standard alexnet
+            ### where (bias)k=2.0)
             _norm2 = tf.nn.lrn(_pool2,5,bias=1.0,alpha=0.0001,beta=0.75,name='norm2')
             
         ####################################################################################
@@ -147,8 +147,8 @@ def main(_):
             _pool3 = tf.nn.max_pool(_out_s3_conv3,ksize=[1,2,2,1],strides=[1,2,2,1],
                                     padding='SAME',name='pool3')
             #Local response norm at stage 1
-            ''' Note that this follows the default of tflearn and different from standard alexnet
-            where (bias)k=2.0)'''
+            ### Note that this follows the default of tflearn and different from standard alexnet
+            ### where (bias)k=2.0)
             _norm3 = tf.nn.lrn(_pool3,5,bias=1.0,alpha=0.0001,beta=0.75,name='norm2')
         ####################################################################################
         #Stage 4 : 2 fully-connected layers + 1 softmax layer
@@ -187,25 +187,33 @@ def main(_):
         session  =  tf.Session()
         session.run(tf.initialize_all_variables())
 
-        saver = tf.train.Saver()
-        saver.save(session,FLAGS.ckpt_prefix,global_step=0, latest_filename=FLAGS.ckpt_state_name)
-        tf.train.write_graph(session.graph.as_graph_def(),FLAGS.temp_dir,FLAGS.inp_graph_name)
+        ## Method 1
+        #saver = tf.train.Saver()
+        #saver.save(session,FLAGS.ckpt_prefix,global_step=0, latest_filename=FLAGS.ckpt_state_name)
+        #tf.train.write_graph(session.graph.as_graph_def(),FLAGS.temp_dir,FLAGS.inp_graph_name)
+        ### Method 2
+        output_graph_def = graph_util.convert_variables_to_constants(sess,graph.as_graph_def(), [FLAGS.final_tensor_name])
+        with gfile.FastGFile(FLAGS.output_graph, 'wb') as f:
+            f.write(output_graph_def.SerializeToString())
+        with gfile.FastGFile(FLAGS.output_labels, 'w') as f:
+            f.write('\n'.join(image_lists.keys()) + '\n')
 
+                            
     #### SAVE TO FILE ###
     print('Saving alexnet to ',FLAGS.temp_dir)
     # We save out the graph to disk, and then call the const conversion
     # routine.
-    input_graph_path = os.path.join(FLAGS.temp_dir, FLAGS.inp_graph_name)
-    input_saver_def_path = ""
-    input_binary = False
-    input_checkpoint_path = FLAGS.ckpt_prefix + "-0"
-    output_node_names = "output_node"
-    restore_op_name = "save/restore_all"
-    filename_tensor_name = "save/Const:0"
-    output_graph_path = os.path.join(FLAGS.temp_dir, FLAGS.outp_graph_name)
-    clear_devices = False
+    #input_graph_path = os.path.join(FLAGS.temp_dir, FLAGS.inp_graph_name)
+    #input_saver_def_path = ""
+    #input_binary = False
+    #input_checkpoint_path = FLAGS.ckpt_prefix + "-0"
+    #output_node_names = "output_node"
+    #restore_op_name = "save/restore_all"
+    #filename_tensor_name = "save/Const:0"
+    #output_graph_path = os.path.join(FLAGS.temp_dir, FLAGS.outp_graph_name)
+    #clear_devices = False
 
-    freeze_graph.freeze_graph(input_graph_path, input_saver_def_path,
+    #freeze_graph.freeze_graph(input_graph_path, input_saver_def_path,
                               input_binary, input_checkpoint_path,
                               output_node_names, restore_op_name,
                               filename_tensor_name, output_graph_path,
@@ -232,3 +240,4 @@ def main(_):
     '''
 if __name__=='__main__':
     tf.app.run()
+`
