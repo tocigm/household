@@ -7,8 +7,9 @@ from __future__ import division, print_function, absolute_import
 import numpy as np
 import tensorflow as tf
 from tensorflow.python.platform import googletest
-
+from tensorflow.python.framework import graph_util
 from tensorflow.python.tools import freeze_graph
+from tensorflow.python.platform import gfile
 
 import tflearn
 
@@ -181,7 +182,7 @@ def main(_):
                                       initializer=tf.constant(tflearn_model.get_weights(s4_fc3.W)))
             biases  = tf.get_variable('biases',
                                       initializer=tf.constant(tflearn_model.get_weights(s4_fc3.b)))
-            fc3_out = tf.add(tf.matmul(_out_fc2,weights),biases,name=scope.name)
+            fc3_out = tf.add(tf.matmul(_out_fc2,weights),biases,name='final_tensor')
         
         
         session  =  tf.Session()
@@ -192,11 +193,10 @@ def main(_):
         #saver.save(session,FLAGS.ckpt_prefix,global_step=0, latest_filename=FLAGS.ckpt_state_name)
         #tf.train.write_graph(session.graph.as_graph_def(),FLAGS.temp_dir,FLAGS.inp_graph_name)
         ### Method 2
-        output_graph_def = graph_util.convert_variables_to_constants(sess,graph.as_graph_def(), [FLAGS.final_tensor_name])
-        with gfile.FastGFile(FLAGS.output_graph, 'wb') as f:
+        output_graph_def = graph_util.convert_variables_to_constants(session,session.graph.as_graph_def(),['s4_softmax/final_tensor'])
+        output_graph_path = os.path.join(FLAGS.temp_dir, FLAGS.outp_graph_name)
+        with gfile.FastGFile(output_graph_path, 'wb') as f:
             f.write(output_graph_def.SerializeToString())
-        with gfile.FastGFile(FLAGS.output_labels, 'w') as f:
-            f.write('\n'.join(image_lists.keys()) + '\n')
 
                             
     #### SAVE TO FILE ###
@@ -210,14 +210,14 @@ def main(_):
     #output_node_names = "output_node"
     #restore_op_name = "save/restore_all"
     #filename_tensor_name = "save/Const:0"
-    #output_graph_path = os.path.join(FLAGS.temp_dir, FLAGS.outp_graph_name)
+    output_graph_path = os.path.join(FLAGS.temp_dir, FLAGS.outp_graph_name)
     #clear_devices = False
 
     #freeze_graph.freeze_graph(input_graph_path, input_saver_def_path,
-                              input_binary, input_checkpoint_path,
-                              output_node_names, restore_op_name,
-                              filename_tensor_name, output_graph_path,
-                              clear_devices,"")
+    #                          input_binary, input_checkpoint_path,
+    #                          output_node_names, restore_op_name,
+    #                          filename_tensor_name, output_graph_path,
+    #                          clear_devices,"")
 
     ''' LOAD PB file. code from: https://github.com/tensorflow/tensorflow/blob/00440e99ffb1ed1cfe4b4ea650e0c560838a6edc/tensorflow/python/tools/freeze_graph_test.py#L68'''
     # Now we make sure the variable is now a constant, and that the graph still
@@ -240,4 +240,3 @@ def main(_):
     '''
 if __name__=='__main__':
     tf.app.run()
-`
